@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クイズアプリ</title>
+</head>
+<body>
+    <div id="startBlock">
+        <h1>ようこそ</h1>
+        <p style="border-top:1px solid gray ;border-bottom: 1px solid gray;">以下のボタンをクリック</p>
+        <script src="kadai.js"></script>
+        <button id="startQuestions">開始</button>
+    </div>
+    <div id="waitBlock" style="display: none;">
+        <h1>取得中</h1>
+        <p style="border-top:1px solid gray ;border-bottom: 1px solid gray;">少々お待ちください</p>
+    </div>
+    <div id="quizBlock" style="display: none;">
+        <h1>問題<span id="quizNum"></span></h1>
+        <p style="font-weight: bold;">[ジャンル]<span id="quizGenre"></span></p>
+        <p style="font-weight: bold;">[難易度]<span id="quizDifficulty"></span></p>
+        <p id="quizDetail" style="border-top:1px solid gray ;border-bottom: 1px solid gray;">問題内容</p>
+        <div id="quizContentDisplay" style="display: flex; flex-direction: column; align-items: baseline;">
+        </div>
+    </div>
+    <div id="resultBlock" style="display: none;">
+        <h1>あなたの正答数は<span id="resultNum"></span>です!!</h1>
+        <p style="border-top:1px solid gray ;border-bottom: 1px solid gray;">再度チャレンジしたい場合は以下をクリック!!</p>
+        <button id="resetQuestions">ホームに戻る</button>
+    </div>
+    <script src="kadai.js"></script>
+</body>
+</html>
