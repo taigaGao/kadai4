@@ -18,6 +18,32 @@ window.onload = function () {
     let correctCount = 0;
     //クイズの内容を格納する空オブジェクトを作成
     let quizContentArray = {};
+    //サーバーから受け取ったクイズをオブジェクトに格納、正答と誤答を混ぜた配列を作成してJSONに追加する処理
+    const makeQuizObjectAndStartQuiz = (text) => {
+        quizContentArray = text['results']; //受け取ったJSONからキーresultsをオブジェクトに格納
+        for (let i = 0; i < quizContentArray.length; i++) {
+            //正答と誤答を混ぜた配列(all_answers)を作成する処理
+            let correct_answer = [];
+            correct_answer = [quizContentArray[i].correct_answer];
+            let all_answers = correct_answer.concat(quizContentArray[i].incorrect_answers);
+            //配列の中身をシャッフルする処理
+            for(var n = all_answers.length - 1; n > 0; n--){
+                var r = Math.floor(Math.random() * (n + 1));
+                var tmp = all_answers[n];
+                all_answers[n] = all_answers[r];
+                all_answers[r] = tmp;
+            }
+            //各クイズ情報のオブジェクトにall_answersを追加
+            quizContentArray[i].all_answers = all_answers;
+        }
+        //処理待ち中ブロックの非表示
+        waitBlock.style.display = 'none';
+        //クイズブロックの表示
+        quizBlock.style.display = 'block';
+        //クイズの実行処理を開始
+        displayQuestion();
+    }
+    //サーバーからクイズを取得し、データを加工、表示する処理
     const getQuestion = () => {
         fetch('https://opentdb.com/api.php?amount=10&type=multiple')
             .then((response) => {
@@ -27,29 +53,8 @@ window.onload = function () {
                     throw new Error();
                 }
             })
-            .then((text) => { //前回の処理の結果を受け取り、後続の処理を実行
-                quizContentArray = text['results']; //受け取ったJSONからキーresultsをオブジェクトに格納
-                for (let i = 0; i < quizContentArray.length; i++) {
-                    //正答と誤答を混ぜた配列(all_answers)を作成する処理
-                    let correct_answer = [];
-                    correct_answer = [quizContentArray[i].correct_answer];
-                    let all_answers = correct_answer.concat(quizContentArray[i].incorrect_answers);
-                    //配列の中身をシャッフルする処理
-                    for(var n = all_answers.length - 1; n > 0; n--){
-                        var r = Math.floor(Math.random() * (n + 1));
-                        var tmp = all_answers[n];
-                        all_answers[n] = all_answers[r];
-                        all_answers[r] = tmp;
-                    }
-                    //各クイズ情報のオブジェクトにall_answersを追加
-                    quizContentArray[i].all_answers = all_answers;
-                }
-                //処理待ち中ブロックの非表示
-                waitBlock.style.display = 'none';
-                //クイズブロックの表示
-                quizBlock.style.display = 'block';
-                //クイズの実行処理を開始
-                displayQuestion();
+            .then((text) => {
+                makeQuizObjectAndStartQuiz(text)
             })
             .catch((error) => console.log(error));
     };
